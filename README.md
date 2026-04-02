@@ -23,6 +23,7 @@
 | Warrior | Blade weapons (2-3) | Blade Master |
 | Mage    | Magic spells (2-3) | Arch Mage |
 | Ranger  | Ranged attacks (2-3) | Sniper Master |
+tutututut
 
 ## Table of Contents
 
