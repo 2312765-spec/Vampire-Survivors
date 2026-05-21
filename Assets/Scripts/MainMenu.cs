@@ -17,4 +17,10 @@ public class MainMenu : MonoBehaviour
         Application.Quit(); // Quit the game. GK
         Debug.Log("I'm Quitting");
     }
+
+    public void CreditGame()
+    {
+        Debug.Log("Showing Credit");
+
+    }
 }
