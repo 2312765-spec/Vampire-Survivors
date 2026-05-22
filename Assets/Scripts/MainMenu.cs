@@ -5,22 +5,30 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public string firstLevelName; // The first level name. GK
-
-    public void StartGame() // Start the game. GK
+    public string firstLevelName;
+    [SerializeField] private GameObject creditPanel;
+    public void StartGame()
     {
-        SceneManager.LoadScene(firstLevelName); // Load the first level. GK
+        SceneManager.LoadScene(firstLevelName);
     }
 
-    public void QuitGame() // Quit the game. GK
+    public void QuitGame()
     {
-        Application.Quit(); // Quit the game. GK
+        Application.Quit();
         Debug.Log("I'm Quitting");
     }
 
-    public void CreditGame()
+    public void OpenCredit()
     {
-        Debug.Log("Showing Credit");
+        Debug.Log("Open Credit");
+        ChangeBGM.Instance.PlayCredit();
+        creditPanel.SetActive(true);
+    }
+    public void CloseCredit()
+    {
+        Debug.Log("Close Credit");
+        ChangeBGM.Instance.PlayMainMenu();
+        creditPanel.SetActive(false);
 
     }
 }
