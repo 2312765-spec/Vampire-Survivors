@@ -3,20 +3,23 @@ using UnityEngine;
 public class SpawnGenerator
 {
     private readonly GridData gridData;
-
     private readonly RandomSeed rds;
+    private readonly SpawnPoint spawnPoint;
 
-    public SpawnGenerator(GridData gridData, RandomSeed rds)
+    public SpawnGenerator(GridData gridData, RandomSeed rds, SpawnPoint spawnPoint)
     {
         this.gridData = gridData;
         this.rds = rds;
+        this.spawnPoint = spawnPoint;
     }
 
     public void Generate(int count)
     {
         int placed = 0;
-
         int attempts = 0;
+
+        this.spawnPoint.Clear();
+
 
         while (placed < count && attempts < count * 20)
         {
@@ -44,6 +47,7 @@ public class SpawnGenerator
                 continue;
 
             cell.Type = CellType.Spawn;
+            spawnPoint.Add(new Vector3(x + 0.5f, y + 0.5f, 0f));
 
             placed++;
         }

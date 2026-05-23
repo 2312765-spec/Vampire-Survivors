@@ -24,6 +24,8 @@ public class SimpleGenerator : MonoBehaviour
     private PlayerSpawnBootstrap playerSpawnBootstrap;
     [SerializeField]
     private RuntimeObstacleSpawner obstacleSpawner;
+    [SerializeField]
+    private SpawnPoint spawnPoint;
 
     private GridData gridData;
 
@@ -57,7 +59,7 @@ public class SimpleGenerator : MonoBehaviour
         obstacleGenerator.Generate(this.obstacleDensity, houseChance, rockChance);
 
         Debug.Log("Gene spawner");
-        SpawnGenerator spawnGenerator = new SpawnGenerator(gridData, rdm);
+        SpawnGenerator spawnGenerator = new SpawnGenerator(gridData, rdm, spawnPoint);
         spawnGenerator.Generate(this.spawnerCount);
 
         Debug.Log("checking obstacle");

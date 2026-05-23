@@ -147,11 +147,3 @@ public class EnemySpawner : MonoBehaviour
         spawnCounter = waves[currentWave].timeBetweenSpawns; // Set the spawn counter to the time between spawns. AK
     }
 }
-
-[System.Serializable]
-public class WaveInfo
-{
-    public GameObject enemyToSpawn;
-    public float waveLength = 10f;
-    public float timeBetweenSpawns = 1f;
-}
