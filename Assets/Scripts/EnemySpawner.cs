@@ -148,10 +148,10 @@ public class EnemySpawner : MonoBehaviour
     }
 }
 
-[System.Serializable] // Make the class serializable. AK
-public class WaveInfo // The wave information. AK
+[System.Serializable]
+public class WaveInfo
 {
-    public GameObject enemyToSpawn; // The enemy to spawn. AK
-    public float waveLength =10f; // The length of the wave. AK
-    public float timeBetweenSpawns = 1f; // The time between spawns. AK
+    public GameObject enemyToSpawn;
+    public float waveLength = 10f;
+    public float timeBetweenSpawns = 1f;
 }

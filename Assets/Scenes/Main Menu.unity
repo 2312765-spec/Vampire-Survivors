@@ -1175,7 +1175,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 5953500255205051606, guid: 78ddbcdbf35d9b04ebd17a291865754f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: f870f407e1d8e8441be05eaa87e8345c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3341572b644179c419bfede51f461114, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1289,7 +1289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmSource: {fileID: 899807280}
-  mainMenuBGM: {fileID: 8300000, guid: f870f407e1d8e8441be05eaa87e8345c, type: 3}
+  mainMenuBGM: {fileID: 8300000, guid: 3341572b644179c419bfede51f461114, type: 3}
   creditBGM: {fileID: 8300000, guid: 249eb46709fce3f4c8a3c95d67e46a42, type: 3}
   maxVolume: 1
 --- !u!1 &1099238490
@@ -1327,7 +1327,7 @@ RectTransform:
   - {fileID: 1621511187}
   - {fileID: 1935790969}
   m_Father: {fileID: 1365760945}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1750,8 +1750,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1099238491}
   - {fileID: 1595086371}
+  - {fileID: 1099238491}
   - {fileID: 1815884241}
   - {fileID: 220387833}
   - {fileID: 573800470}
@@ -2066,7 +2066,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1365760945}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1621511185
 GameObject:
@@ -2615,6 +2615,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstLevelName: Main
   creditPanel: {fileID: 343845567}
+  startButton: {fileID: 573800469}
+  quitButton: {fileID: 503828587}
+  creditButton: {fileID: 1787724667}
 --- !u!1 &1935790967
 GameObject:
   m_ObjectHideFlags: 0
