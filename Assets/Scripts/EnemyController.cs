@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     public float knockBackTime = .5f; // The time to knock back the enemy. AK
     private float knockBackCounter; // The counter for the knock back time. AK
     public int expToGive = 1; // The experience to give when the enemy is destroyed. GK
+    public float expMultiplier = 1f; // Multiplier for experience dropped by this enemy. GK
     public int coinValue = 1; // The value of the coin. D
     public float coinDropRate = 0.5f; // The rate at which the coin drops. D
 
@@ -92,7 +93,8 @@ public class EnemyController : MonoBehaviour
         if (health <= 0) // If the health is less than or equal to 0. AK
         {
             Destroy(gameObject); // Destroy the enemy. AK
-            ExperienceLevelController.instance.SpawnExp(transform.position, expToGive); // Set the experience when the enemy is destroyed. GK
+            int expAmount = Mathf.Max(1, Mathf.RoundToInt(expToGive * expMultiplier));
+            ExperienceLevelController.instance.SpawnExp(transform.position, expAmount); // Set the experience when the enemy is destroyed. GK
             if (Random.value <= coinDropRate) // If the random value is less than or equal to the coin drop rate. D
             {
                 CoinController.instance.DropCoin(transform.position, coinValue); // Drop the coin. D

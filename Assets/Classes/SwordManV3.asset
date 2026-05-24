@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   className: 
   classDescription: 
-  classIcon: {fileID: 0}
+  classIcon: {fileID: 21300000, guid: 639fbb7ae5bbd944bba34fb90accc001, type: 3}
   animatorController: {fileID: 0}
   characterPrefab: {fileID: 160603543031662021, guid: 81c9474850b41b141a601f7a11b9bc8f, type: 3}
   overlayPrefab: {fileID: 0}

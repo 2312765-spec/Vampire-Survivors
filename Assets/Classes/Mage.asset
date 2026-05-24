@@ -25,4 +25,4 @@ MonoBehaviour:
   - {fileID: 3433852762559700994, guid: bb116285491c15c4eb99f6760d27de86, type: 3}
   promotionClass: {fileID: 11400000, guid: f9432f4e33632c14ba9e7ab4dbb46570, type: 2}
   promotionDescription: 
-  secondClassUnlockChance: 0.154
+  secondClassUnlockChance: 0

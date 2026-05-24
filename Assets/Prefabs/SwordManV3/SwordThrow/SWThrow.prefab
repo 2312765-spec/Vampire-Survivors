@@ -46,21 +46,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 2
-    damage: 40
+    damage: 100
     range: 2
     timeBetweenAttacks: 3
     amount: 3
     duration: 0
     upgradeText: SwordThrow 1
   - speed: 3
-    damage: 60
+    damage: 150
     range: 3
     timeBetweenAttacks: 3
     amount: 5
     duration: 0
     upgradeText: SwordThrow 2
   - speed: 4
-    damage: 100
+    damage: 200
     range: 4
     timeBetweenAttacks: 3
     amount: 7

@@ -47,24 +47,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 7
-    damage: 30
+    damage: 60
     range: 8
     timeBetweenAttacks: 2
-    amount: 3
+    amount: 10
     duration: 5
     upgradeText: Meteor 1
   - speed: 8
-    damage: 40
+    damage: 80
     range: 10
     timeBetweenAttacks: 1.5
-    amount: 5
+    amount: 15
     duration: 5
     upgradeText: Meteor 2
   - speed: 9
-    damage: 50
+    damage: 100
     range: 12
     timeBetweenAttacks: 1.5
-    amount: 7
+    amount: 20
     duration: 5
     upgradeText: Meteor 3
   weaponLevel: 0

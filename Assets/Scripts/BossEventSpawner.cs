@@ -50,8 +50,8 @@ public class BossEventSpawner : MonoBehaviour
         }
         else
         {
-            iceDragonCount = 1 + (level - 9) / 2;
-            fireDragonCount = 1 + (level - 9 + 1) / 2;
+            iceDragonCount = 1 + (level - 9) / 9;
+            fireDragonCount = 1 + (level - 9 + 1) / 9;
         }
 
         int totalBosses = iceDragonCount + fireDragonCount;
@@ -64,37 +64,32 @@ public class BossEventSpawner : MonoBehaviour
         for (int i = 0; i < fireDragonCount; i++) bossesToSpawn.Add(dragonFirePrefab);
 
         // Sinh tất cả Boss ra và chia đều góc
-        SpawnAllBossesEvenly(bossesToSpawn);
+        StartCoroutine(SpawnAllBossesEvenly(bossesToSpawn));
     }
 
-    void SpawnAllBossesEvenly(List<GameObject> bosses)
+    IEnumerator SpawnAllBossesEvenly(List<GameObject> bosses)
     {
-        int total = bosses.Count;
-        if (total == 0) return;
+    int total = bosses.Count;
+    if (total == 0) yield break;
 
-        // Tạo một góc xoay ngẫu nhiên ban đầu để mỗi lần lên cùng 1 cấp, vị trí xuất hiện vẫn mới mẻ
-        float startingAngle = Random.Range(0f, 360f);
+    float startingAngle = Random.Range(0f, 360f);
+    float angleStep = 360f / total;
 
-        // Tính khoảng cách góc giữa các con Boss (ví dụ: 3 con -> 360 / 3 = 120 độ)
-        float angleStep = 360f / total;
+    for (int i = 0; i < total; i++)
+    {
+        if (bosses[i] == null) continue;
 
-        for (int i = 0; i < total; i++)
-        {
-            if (bosses[i] == null) continue;
+        float currentAngle = startingAngle + (i * angleStep);
+        float angleRad = currentAngle * Mathf.Deg2Rad;
 
-            // Tính góc chính xác cho con Boss thứ i
-            float currentAngle = startingAngle + (i * angleStep);
-            
-            // Đổi sang Radian để tính Toạ độ toán học Sin, Cos
-            float angleRad = currentAngle * Mathf.Deg2Rad;
+        Vector3 spawnPosition = player.position + 
+            new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad), 0f) * spawnOffset;
 
-            // Tính vị trí xuất hiện trên vòng tròn bán kính (spawnOffset) bao quanh Player
-            Vector3 spawnPosition = player.position + new Vector3(Mathf.Cos(angleRad), Mathf.Sin(angleRad), 0f) * spawnOffset;
+        Instantiate(bosses[i], spawnPosition, Quaternion.identity);
+        Debug.Log($"-> Boss thứ {i + 1} xuất hiện ở góc: {currentAngle % 360f} độ.");
 
-            // Sinh Boss ra tại vị trí riêng biệt đó
-            Instantiate(bosses[i], spawnPosition, Quaternion.identity);
-            
-            Debug.Log($"-> Boss thứ {i + 1} xuất hiện ở góc: {currentAngle % 360f} độ.");
-        }
+        // ← Delay giữa mỗi con boss (chỉnh số giây tùy ý)
+        yield return new WaitForSecondsRealtime(100f); // 2 giây/con, dùng Realtime vì Time.timeScale có thể = 0
+    }
     }
 }

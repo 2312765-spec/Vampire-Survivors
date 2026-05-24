@@ -27,4 +27,4 @@ MonoBehaviour:
   promotionClass: {fileID: 11400000, guid: 41e64a61422378847aacd7eb6bfca86b, type: 2}
   promotionDescription: Promote Warrior to Blade Master - gain enhanced speed and
     power!
-  secondClassUnlockChance: 1
+  secondClassUnlockChance: 0

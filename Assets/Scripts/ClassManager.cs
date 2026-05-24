@@ -12,22 +12,21 @@ public class ClassManager : MonoBehaviour
     public List<ClassData> playerClasses = new List<ClassData>();
     public int activeClassIndex = 0;
     public int maxClasses = 3;
-    
+
     [HideInInspector]
-    public ClassData firstClassSelected;  // ✅ Lưu class đầu tiên được chọn
+    public ClassData firstClassSelected;  // Lưu class đầu tiên được chọn
 
     private void Awake()
     {
         instance = this;
         Debug.Log($"🔍 ClassManager.Awake - playerClasses.Count: {playerClasses.Count}");
-        if (playerClasses.Count > 0)
-        {
-            for (int i = 0; i < playerClasses.Count; i++)
-            {
-                Debug.Log($"  Class {i}: {playerClasses[i]?.className ?? "NULL"}");
-            }
-        }
+        for (int i = 0; i < playerClasses.Count; i++)
+            Debug.Log($"  Class {i}: {playerClasses[i]?.className ?? "NULL"}");
     }
+
+    // -----------------------------------------------------------------------
+    // Properties
+    // -----------------------------------------------------------------------
 
     public ClassData ActiveClass
     {
@@ -39,13 +38,15 @@ public class ClassManager : MonoBehaviour
         }
     }
 
-    public bool HasNoClass => playerClasses.Count == 0;
+    public bool HasNoClass     => playerClasses.Count == 0;
     public bool CanUnlockNewClass => playerClasses.Count < maxClasses;
 
     public bool HasClass(ClassData classData)
-    {
-        return classData != null && playerClasses.Contains(classData);
-    }
+        => classData != null && playerClasses.Contains(classData);
+
+    // -----------------------------------------------------------------------
+    // Class Management
+    // -----------------------------------------------------------------------
 
     public void SetActiveClass(int index)
     {
@@ -62,7 +63,6 @@ public class ClassManager : MonoBehaviour
         if (playerClasses.Contains(classData)) return;
         if (playerClasses.Count >= maxClasses) return;
 
-        // ✅ Track class đầu tiên được chọn
         if (playerClasses.Count == 0)
             firstClassSelected = classData;
 
@@ -78,9 +78,7 @@ public class ClassManager : MonoBehaviour
 
         if (!playerClasses.Contains(classData))
         {
-            if (playerClasses.Count >= maxClasses)
-                return;
-
+            if (playerClasses.Count >= maxClasses) return;
             playerClasses.Add(classData);
         }
 
@@ -92,16 +90,14 @@ public class ClassManager : MonoBehaviour
 
     public void PromoteClass(ClassData classData)
     {
-        if (classData == null) return;
-        if (classData.promotionClass == null) return;
+        if (classData == null || classData.promotionClass == null) return;
 
         int idx = playerClasses.IndexOf(classData);
         if (idx < 0) return;
 
-        // ✅ CLEAR TẤT CẢ weapons trước promote (stop all coroutines, effects)
+        // Disable tất cả weapons trước promote
         if (PlayerController.instance != null)
         {
-            // Disable tất cả weapons và stop coroutines
             Weapon[] allWeapons = PlayerController.instance.GetComponentsInChildren<Weapon>(true);
             foreach (Weapon weapon in allWeapons)
             {
@@ -114,23 +110,63 @@ public class ClassManager : MonoBehaviour
             Debug.Log($"✅ Disabled all {allWeapons.Length} weapons before promote");
         }
 
-        // ✅ Update firstClassSelected → promotion class (để sprite thay đổi)
         if (classData == firstClassSelected)
         {
             firstClassSelected = classData.promotionClass;
             Debug.Log($"✅ Promoted first class: {classData.className} → {classData.promotionClass.className}");
         }
 
-        // ✅ Replace class trong list (giữ overlays, không remove)
         playerClasses[idx] = classData.promotionClass;
         activeClassIndex = idx;
 
         if (PlayerController.instance != null)
-        {
             PlayerController.instance.ApplyClass(classData.promotionClass);
-            // ✅ Overlays vẫn ở, không cần reapply vì không remove
-        }
     }
+
+    // -----------------------------------------------------------------------
+    // FIX: Weapon queries that cover ALL player classes (primary + secondary)
+    // -----------------------------------------------------------------------
+
+    /// <summary>
+    /// Returns available (not-yet-maxed) weapons across ALL classes the player owns.
+    /// Used by ExperienceLevelController so secondary-class weapons appear in level-up choices.
+    /// </summary>
+    public List<Weapon> GetAvailableWeaponsForAllClasses()
+    {
+        var available = new List<Weapon>();
+
+        foreach (var classData in playerClasses)
+        {
+            if (classData == null) continue;
+
+            foreach (var w in GetAvailableWeaponsForClass(classData))
+            {
+                if (!available.Contains(w))   // no duplicates
+                    available.Add(w);
+            }
+        }
+
+        Debug.Log($"🔍 GetAvailableWeaponsForAllClasses: {available.Count} weapons across {playerClasses.Count} classes");
+        return available;
+    }
+
+    /// <summary>
+    /// Returns true only when every weapon of every owned class is fully levelled.
+    /// Used to decide when to spawn Ascend Stones.
+    /// </summary>
+    public bool AreAllWeaponsMaxedForAllClasses()
+    {
+        foreach (var classData in playerClasses)
+        {
+            if (!AreAllWeaponsMaxedForClass(classData))
+                return false;
+        }
+        return true;
+    }
+
+    // -----------------------------------------------------------------------
+    // Per-class weapon queries (unchanged logic, kept for single-class calls)
+    // -----------------------------------------------------------------------
 
     public List<ClassData> GetUnlockableClasses()
     {
@@ -139,19 +175,36 @@ public class ClassManager : MonoBehaviour
         foreach (var c in allClasses)
         {
             if (c == null) continue;
-            if (playerClasses.Contains(c)) continue;  // ✅ Đã có rồi
-            
-            // ✅ Bỏ qua class cũ (nếu promotion của nó đã được nâng)
-            // Ví dụ: Nếu ArchMage đã được nâng, bỏ qua Mage
+            if (playerClasses.Contains(c)) continue;
+
+            // Skip old version if promotion already unlocked
             if (c.promotionClass != null && playerClasses.Contains(c.promotionClass))
-            {
-                continue;  // Skip - class này là old version
-            }
-            
+                continue;
+            if (IsObsoleteByPromotion(c)) continue;    
+
             result.Add(c);
         }
 
         return result;
+    }
+    private bool IsObsoleteByPromotion(ClassData classData)
+    {
+        ClassData current = classData;
+
+        while (current.promotionClass != null)
+        {
+        current = current.promotionClass;
+
+        // Nếu bất kỳ version cao hơn nào đã có → class này obsolete
+        if (playerClasses.Contains(current))
+        {
+            Debug.Log($"⚠️ Skipping {classData.className} — " +
+                      $"player already has promoted version: {current.className}");
+            return true;
+        }
+    }
+
+        return false;
     }
 
     public List<Weapon> GetAvailableWeaponsForClass(ClassData classData)
@@ -165,31 +218,21 @@ public class ClassManager : MonoBehaviour
         {
             if (weaponPrefab == null) continue;
 
-            // Tìm instance weapon này từ prefab
             Weapon foundWeapon = null;
 
             foreach (var w in PlayerController.instance.assignedWeapons)
             {
-                if (w != null && w.weaponPrefab == weaponPrefab)
-                {
-                    foundWeapon = w;
-                    break;
-                }
+                if (w != null && w.weaponPrefab == weaponPrefab) { foundWeapon = w; break; }
             }
 
             if (foundWeapon == null)
             {
                 foreach (var w in PlayerController.instance.unassignedWeapons)
                 {
-                    if (w != null && w.weaponPrefab == weaponPrefab)
-                    {
-                        foundWeapon = w;
-                        break;
-                    }
+                    if (w != null && w.weaponPrefab == weaponPrefab) { foundWeapon = w; break; }
                 }
             }
 
-            // Nếu tìm được và chưa max, thêm vào available
             if (foundWeapon != null)
             {
                 bool isMaxed = PlayerController.instance.fullyLevelledWeapons.Contains(foundWeapon);
@@ -211,35 +254,25 @@ public class ClassManager : MonoBehaviour
         {
             if (weaponPrefab == null) continue;
 
-            // Tìm instance weapon từ prefab này
             Weapon foundWeapon = null;
 
             foreach (var w in PlayerController.instance.assignedWeapons)
             {
-                if (w != null && w.weaponPrefab == weaponPrefab)
-                {
-                    foundWeapon = w;
-                    break;
-                }
+                if (w != null && w.weaponPrefab == weaponPrefab) { foundWeapon = w; break; }
             }
 
             if (foundWeapon == null)
             {
                 foreach (var w in PlayerController.instance.fullyLevelledWeapons)
                 {
-                    if (w != null && w.weaponPrefab == weaponPrefab)
-                    {
-                        foundWeapon = w;
-                        break;
-                    }
+                    if (w != null && w.weaponPrefab == weaponPrefab) { foundWeapon = w; break; }
                 }
             }
 
-            // Nếu không tìm được hoặc chưa max level → false
             if (foundWeapon == null || !PlayerController.instance.fullyLevelledWeapons.Contains(foundWeapon))
                 return false;
         }
 
         return true;
     }
-    }
+}

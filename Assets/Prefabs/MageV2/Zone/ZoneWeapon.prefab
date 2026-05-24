@@ -95,22 +95,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-  - speed: 1
-    damage: 25
+  - speed: 0.1
+    damage: 30
     range: 1.5
     timeBetweenAttacks: 2
     amount: 0
     duration: 10
     upgradeText: DarkZone 1
-  - speed: 1
-    damage: 30
+  - speed: 0.1
+    damage: 40
     range: 2
     timeBetweenAttacks: 1.8
     amount: 0
     duration: 12
     upgradeText: DarkZone 2
-  - speed: 0.8
-    damage: 35
+  - speed: 0.1
+    damage: 50
     range: 2.5
     timeBetweenAttacks: 1.5
     amount: 0

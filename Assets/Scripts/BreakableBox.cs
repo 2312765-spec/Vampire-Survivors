@@ -3,7 +3,7 @@ using UnityEngine;
 public class BreakableBox : MonoBehaviour
 {
     [Header("Box Stats")]
-    public float health = 150f; // Máu của hộp đã được tăng
+    public float health = 50f; // Máu của hộp đã được tăng
 
     [Header("Drops")]
     public GameObject healthPotionPrefab; // Kéo Prefab Bình máu

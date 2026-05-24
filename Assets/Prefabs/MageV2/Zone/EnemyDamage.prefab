@@ -47,7 +47,7 @@ MonoBehaviour:
   damageAmount: 35
   lifeTime: 14
   growSpeed: 0
-  shouldKnockBack: 1
+  shouldKnockBack: 0
   destroyParent: 0
   damageOverTime: 1
   timeBetweenDamage: 0.8

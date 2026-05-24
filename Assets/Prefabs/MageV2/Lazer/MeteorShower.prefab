@@ -46,21 +46,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 2
-    damage: 25
+    damage: 40
     range: 2
     timeBetweenAttacks: 6
     amount: 3
     duration: 0
     upgradeText: Meteor Shower 1
   - speed: 2
-    damage: 35
+    damage: 50
     range: 2.5
     timeBetweenAttacks: 5.8
     amount: 5
     duration: 0
     upgradeText: Meteor Shower 2
   - speed: 2
-    damage: 45
+    damage: 60
     range: 3
     timeBetweenAttacks: 5.5
     amount: 7

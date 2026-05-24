@@ -17,21 +17,14 @@ public class ExperienceLevelController : MonoBehaviour
 
     private void Start()
     {
-        // Safety: make sure expLevels has at least one base value
         if (expLevels.Count == 0)
-        {
-            expLevels.Add(20); // base exp requirement for level 1 -> 2
-        }
+            expLevels.Add(5);
 
         while (expLevels.Count < levelCount)
-        {
-            expLevels.Add(Mathf.CeilToInt(expLevels[expLevels.Count - 1] * 2.5f));
-        }
+            expLevels.Add(Mathf.CeilToInt(expLevels[expLevels.Count - 1] * 1.2f));
 
         if (UIController.instance != null)
-        {
             UIController.instance.UpdateExperience(currentExperience, expLevels[currentLevel], currentLevel);
-        }
     }
 
     public void GetExp(int amountToGet)
@@ -41,7 +34,7 @@ public class ExperienceLevelController : MonoBehaviour
         while (currentLevel < expLevels.Count && currentExperience >= expLevels[currentLevel])
         {
             LevelUp();
-            break; // keep one level-up at a time for the UI
+            break; // one level-up at a time for UI
         }
 
         if (UIController.instance != null)
@@ -76,12 +69,13 @@ public class ExperienceLevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// Builds the list of upgrade choices for the level-up panel using the class progression system.
+    /// Builds the list of upgrade choices for the level-up panel.
+    ///
     /// Rules:
-    ///   1. If no class yet → offer class selections.
-    ///   2. If active class has promotion & all weapons maxed → offer Promotion.
-    ///   3. Always offer weapon upgrades / unlocks for the active class when possible.
-    ///   4. If CanUnlockNewClass && còn slot → cũng cho chọn class mới (KHÔNG bắt buộc vũ khí phải max nữa).
+    ///   1. No class yet / only Starter → offer class selections.
+    ///   2. Has class(es) → offer weapon upgrades from ALL owned classes (primary + secondary).
+    ///   3. All weapons maxed across ALL classes → spawn Ascend Stones.
+    ///   4. CanUnlockNewClass && slot free → also offer a new class (5 % chance if already has one).
     /// </summary>
     private void BuildClassBasedLevelUpChoices()
     {
@@ -89,203 +83,150 @@ public class ExperienceLevelController : MonoBehaviour
             return;
 
         var buttons = UIController.instance.levelUpButtons;
-        var choices = new List<LevelUpChoice>();
+        var choices  = new List<LevelUpChoice>();
         ClassManager cm = ClassManager.instance;
 
-        Debug.Log($"🔍 BuildClassBasedLevelUpChoices - buttons.Length: {buttons?.Length ?? -1}, HasNoClass: {cm.HasNoClass}");
+        Debug.Log($"🔍 BuildClassBasedLevelUpChoices - buttons: {buttons?.Length ?? -1}, HasNoClass: {cm.HasNoClass}");
 
         UIController.instance.SetLevelUpPanelTitle("Choose Your Path");
 
-        // --------------------------------------------------
-        // Case 1: Player has no class yet OR only has Starter → show class selection
-        // --------------------------------------------------
-        bool shouldOfferClasses = cm.HasNoClass || (cm.ActiveClass != null && cm.ActiveClass.className == "Starter");
-        
+        // ------------------------------------------------------------------
+        // Case 1: No class yet OR only Starter → show class selection
+        // ------------------------------------------------------------------
+        bool shouldOfferClasses = cm.HasNoClass ||
+            (cm.ActiveClass != null && cm.ActiveClass.className == "Starter");
+
         if (shouldOfferClasses)
         {
             UIController.instance.SetLevelUpPanelTitle("Choose Your Class");
 
             var unlockable = cm.GetUnlockableClasses();
             int count = Mathf.Min(unlockable.Count, buttons.Length);
-            
-            Debug.Log($"🔍 Case 1: ShouldOfferClasses - unlockable.Count: {unlockable.Count}, count: {count}");
+            Debug.Log($"🔍 Case 1: unlockable={unlockable.Count}, showing={count}");
 
             for (int i = 0; i < count; i++)
             {
-                choices.Add(new LevelUpChoice
-                {
-                    type = ChoiceType.SelectClass,
-                    classData = unlockable[i]
-                });
-                Debug.Log($"  ✅ Added class choice: {unlockable[i].className}");
+                choices.Add(new LevelUpChoice { type = ChoiceType.SelectClass, classData = unlockable[i] });
+                Debug.Log($"  ✅ Class choice: {unlockable[i].className}");
             }
         }
         else
         {
             ClassData activeClass = cm.ActiveClass;
-            if (activeClass == null)
-                return;
+            if (activeClass == null) return;
 
-            bool allWeaponsMaxed = cm.AreAllWeaponsMaxedForClass(activeClass);
-            Debug.Log($"🔍 allWeaponsMaxed for {activeClass.className}: {allWeaponsMaxed}");
+            // FIX: check ALL classes, not just active
+            bool primaryWeaponsMaxed = cm.AreAllWeaponsMaxedForClass(activeClass);
 
-            // ✅ Nếu tất cả weapons max → spawn ascend stones thay vì offer promotion
-            if (allWeaponsMaxed)
+            bool allWeaponsMaxed = cm.playerClasses.Count > 1
+            ? cm.AreAllWeaponsMaxedForAllClasses()
+            : primaryWeaponsMaxed;
+
+            Debug.Log($"🔍 allWeaponsMaxed (all classes): {allWeaponsMaxed}");
+
+            // Spawn Ascend Stones when every weapon across all classes is maxed
+            if (primaryWeaponsMaxed)
             {
                 if (AscendStoneManager.instance != null)
-                {
-                    AscendStoneManager.instance.SpawnAscendStones();
-                    Debug.Log("✅ All weapons maxed! Ascend stones spawned.");
-                }
+            {
+                AscendStoneManager.instance.SpawnAscendStones();
+                Debug.Log("✅ Primary weapons maxed! Ascend stones spawned.");
+            }
                 else
-                {
-                    Debug.LogWarning("❌ AscendStoneManager.instance is NULL");
-                }
-            }
-            else
             {
-                Debug.Log($"⚠️ Not all weapons maxed for {activeClass.className}");
+                Debug.LogWarning("❌ AscendStoneManager.instance is NULL");
+            }
             }
 
-            // --------------------------------------------------
-            // Case 3: Offer weapon upgrades for the active class (nếu còn weapon để nâng)
-            // --------------------------------------------------
-            List<Weapon> available = cm.GetAvailableWeaponsForClass(activeClass);
-            Debug.Log($"✅ Class Weapons count: {activeClass.classWeapons?.Count ?? 0}");
-            if (activeClass.classWeapons != null)
-            {
-                for (int w = 0; w < activeClass.classWeapons.Count; w++)
-                {
-                    var weaponObj = activeClass.classWeapons[w];
-                    if (weaponObj == null)
-                        Debug.Log($"  ❌ Weapon {w}: NULL");
-                    else
-                    {
-                        var weaponScript = weaponObj.GetComponent<Weapon>();
-                        Debug.Log($"  - Weapon {w}: {weaponObj.name} → Script: {weaponScript?.name ?? "NULL"}");
-                    }
-                }
-            }
+            // ------------------------------------------------------------------
+            // Case 3: Offer weapon upgrades — FIX: from ALL owned classes
+            // ------------------------------------------------------------------
 
-            // ✅ DEBUG: Check unlockable classes
-            var unlockableClasses = cm.GetUnlockableClasses();
-            Debug.Log($"✅ Unlockable classes: {unlockableClasses.Count}");
-            foreach (var uc in unlockableClasses)
-                Debug.Log($"  - {uc.className}");
+            // FIX: if player has secondary class, show weapons from both classes
+            List<Weapon> available = cm.playerClasses.Count > 1
+                ? cm.GetAvailableWeaponsForAllClasses()
+                : cm.GetAvailableWeaponsForClass(activeClass);
 
-            // Số slot dành cho weapon (dùng hết buttons, class offer sẽ fill nếu còn slot)
-            int maxWeaponSlots = buttons.Length;  // ✅ Dùng hết buttons
-            int weaponSlots = Mathf.Min(available.Count, maxWeaponSlots);
+            Debug.Log($"✅ Available weapons across all classes: {available.Count}");
 
+            int weaponSlots = Mathf.Min(available.Count, buttons.Length);
             UIController.instance.SetLevelUpPanelTitle("Choose Your Upgrade");
 
             for (int i = 0; i < weaponSlots && available.Count > 0; i++)
             {
                 int idx = Random.Range(0, available.Count);
-                choices.Add(new LevelUpChoice
-                {
-                    type = ChoiceType.Weapon,
-                    weapon = available[idx]
-                });
+                choices.Add(new LevelUpChoice { type = ChoiceType.Weapon, weapon = available[idx] });
                 available.RemoveAt(idx);
             }
 
-            // --------------------------------------------------
-            // Case 4: Offer unlocking a new class 
-            //  → KHÔNG cần allWeaponsMaxed nữa
-            // --------------------------------------------------
+            // ------------------------------------------------------------------
+            // Case 4: Offer unlocking a new class (if slot available)
+            // ------------------------------------------------------------------
             if (cm.CanUnlockNewClass && choices.Count < buttons.Length)
             {
                 var unlockable = cm.GetUnlockableClasses();
                 foreach (var candidate in unlockable)
                 {
-                    // Stop if no more slots
-                    if (choices.Count >= buttons.Length)
-                        break;
+                    if (choices.Count >= buttons.Length) break;
+                    if (cm.HasClass(candidate)) continue;
 
-                    // ✅ Skip class đã chọn
-                    if (cm.HasClass(candidate))
-                        continue;
-
-                    float roll = Random.value;
-
-                    // ✅ Nếu chưa chọn class nào → 100% offer tất cả
-                    // ✅ Nếu đã chọn class → 5% offer class khác
+                    float roll      = Random.value;
                     float baseChance = cm.HasNoClass ? 1f : 0.05f;
-                    
-                    if (allWeaponsMaxed)
-                        baseChance *= 2f;
+                    if (allWeaponsMaxed) baseChance *= 2f;
 
                     if (roll <= baseChance)
                     {
-                        choices.Add(new LevelUpChoice
-                        {
-                            type = ChoiceType.SelectClass,
-                            classData = candidate
-                        });
-                        Debug.Log($"✅ Offered class: {candidate.className} (hasNoClass={cm.HasNoClass}, roll={roll}, chance={baseChance})");
+                        choices.Add(new LevelUpChoice { type = ChoiceType.SelectClass, classData = candidate });
+                        Debug.Log($"✅ Offered class: {candidate.className} (roll={roll:F2}, chance={baseChance:F2})");
                     }
                 }
             }
         }
 
-        // --------------------------------------------------
-        // Fallback: nếu không có choice nào thì vẫn phải có cái để chọn
-        // --------------------------------------------------
+        // ------------------------------------------------------------------
+        // Fallback: must always have at least one choice
+        // ------------------------------------------------------------------
         if (choices.Count == 0)
         {
-            
             if (cm.HasNoClass)
             {
                 var unlockable = cm.GetUnlockableClasses();
                 int count = Mathf.Min(unlockable.Count, buttons.Length);
-
                 for (int i = 0; i < count; i++)
-                {
-                    choices.Add(new LevelUpChoice
-                    {
-                        type = ChoiceType.SelectClass,
-                        classData = unlockable[i]
-                    });
-                }
+                    choices.Add(new LevelUpChoice { type = ChoiceType.SelectClass, classData = unlockable[i] });
             }
             else
             {
-                ClassData activeClass = cm.ActiveClass;
-                if (activeClass != null)
-                {
-                    List<Weapon> fallbackWeapons = cm.GetAvailableWeaponsForClass(activeClass);
-                    int count = Mathf.Min(fallbackWeapons.Count, buttons.Length);
+                // FIX: fallback also uses all-class weapons
+                List<Weapon> fallback = cm.playerClasses.Count > 1
+                    ? cm.GetAvailableWeaponsForAllClasses()
+                    : cm.GetAvailableWeaponsForClass(cm.ActiveClass);
 
-                    for (int i = 0; i < count; i++)
-                    {
-                        choices.Add(new LevelUpChoice
-                        {
-                            type = ChoiceType.Weapon,
-                            weapon = fallbackWeapons[i]
-                        });
-                    }
-                }
+                int count = Mathf.Min(fallback.Count, buttons.Length);
+                for (int i = 0; i < count; i++)
+                    choices.Add(new LevelUpChoice { type = ChoiceType.Weapon, weapon = fallback[i] });
             }
         }
 
-        // --------------------------------------------------
+        // ------------------------------------------------------------------
         // Apply choices to buttons
-        // --------------------------------------------------
-        Debug.Log($"🔍 Final choices.Count: {choices.Count}, buttons.Length: {buttons.Length}");
-        
+        // ------------------------------------------------------------------
+        Debug.Log($"🔍 Final choices: {choices.Count}, buttons: {buttons.Length}");
+
         for (int i = 0; i < buttons.Length; i++)
         {
             if (i < choices.Count)
             {
                 buttons[i].gameObject.SetActive(true);
                 buttons[i].SetChoice(choices[i]);
-                Debug.Log($"  ✅ Button {i} active with choice type: {choices[i].type}");
+                Debug.Log($"  ✅ Button {i}: {choices[i].type}" +
+                          (choices[i].type == ChoiceType.Weapon
+                              ? $" → {choices[i].weapon?.name}"
+                              : $" → {choices[i].classData?.className}"));
             }
             else
             {
                 buttons[i].gameObject.SetActive(false);
-                Debug.Log($"  ❌ Button {i} deactivated");
             }
         }
 
@@ -294,53 +235,41 @@ public class ExperienceLevelController : MonoBehaviour
     }
 
     /// <summary>
-    /// Hiển thị menu promotion khi nhặt được ascend stone
+    /// Displays the promotion menu when the player picks up an Ascend Stone.
     /// </summary>
     public void ShowAscendStonePromotionMenu()
     {
-        if (ClassManager.instance == null)
-            return;
+        if (ClassManager.instance == null) return;
+        if (UIController.instance == null || UIController.instance.promotionPanel == null) return;
 
-        if (UIController.instance == null || UIController.instance.promotionPanel == null)
-            return;
-
-        // ✅ Check xem tất cả weapons đã max hết chưa
         ClassData activeClass = ClassManager.instance.ActiveClass;
-        if (activeClass == null)
-            return;
+        if (activeClass == null) return;
 
-        bool allWeaponsMaxed = ClassManager.instance.AreAllWeaponsMaxedForClass(activeClass);
-        if (!allWeaponsMaxed)
+    // FIX: chỉ check PRIMARY class (activeClass), không check all classes
+    // Secondary class chưa max không được phép block promotion của primary
+        bool primaryWeaponsMaxed = ClassManager.instance.AreAllWeaponsMaxedForClass(activeClass);
+
+        if (!primaryWeaponsMaxed)
         {
-            Debug.LogWarning("⚠️ Cannot promote: Not all weapons are maxed!");
+            Debug.LogWarning($"⚠️ Cannot promote: {activeClass.className} weapons not all maxed!");
             return;
         }
 
-        // ✅ Build promotion choices cho tất cả classes của player
         var buttons = UIController.instance.promotionButtons;
-        var choices = new List<LevelUpChoice>();
+        var choices  = new List<LevelUpChoice>();
 
         UIController.instance.SetPromotionPanelTitle("Choose Your Promotion");
 
-        // ✅ Offer promotion cho tất cả classes có promotionClass
         foreach (var classData in ClassManager.instance.playerClasses)
         {
-            if (classData == null) continue;
-            if (classData.promotionClass == null) continue;
+            if (classData == null || classData.promotionClass == null) continue;
 
-            choices.Add(new LevelUpChoice
-            {
-                type = ChoiceType.Promotion,
-                classData = classData
-            });
-
+            choices.Add(new LevelUpChoice { type = ChoiceType.Promotion, classData = classData });
             Debug.Log($"✅ Offered promotion: {classData.className} → {classData.promotionClass.className}");
 
-            if (choices.Count >= buttons.Length)
-                break;
+            if (choices.Count >= buttons.Length) break;
         }
 
-        // ✅ Nếu không có promotion nào → đóng menu
         if (choices.Count == 0)
         {
             Debug.LogWarning("⚠️ No promotions available!");
@@ -349,7 +278,6 @@ public class ExperienceLevelController : MonoBehaviour
             return;
         }
 
-        // ✅ Apply choices to buttons
         for (int i = 0; i < buttons.Length; i++)
         {
             if (i < choices.Count)
@@ -363,7 +291,6 @@ public class ExperienceLevelController : MonoBehaviour
             }
         }
 
-        // ✅ Show panel
         UIController.instance.promotionPanel.SetActive(true);
         Time.timeScale = 0f;
 
@@ -385,6 +312,6 @@ public enum ChoiceType
 public class LevelUpChoice
 {
     public ChoiceType type;
-    public Weapon weapon;
-    public ClassData classData;
+    public Weapon     weapon;
+    public ClassData  classData;
 }

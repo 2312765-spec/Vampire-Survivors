@@ -46,23 +46,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 1
-    damage: 20
+    damage: 30
     range: 2
-    timeBetweenAttacks: 7
+    timeBetweenAttacks: 6
     amount: 1
     duration: 0
     upgradeText: Super Slash 1
   - speed: 1
-    damage: 25
+    damage: 40
     range: 2.5
-    timeBetweenAttacks: 6.5
+    timeBetweenAttacks: 5
     amount: 1
     duration: 0
     upgradeText: Super Slash 2
   - speed: 1
-    damage: 30
+    damage: 50
     range: 3
-    timeBetweenAttacks: 6
+    timeBetweenAttacks: 4
     amount: 1
     duration: 0
     upgradeText: Super Slash 3
