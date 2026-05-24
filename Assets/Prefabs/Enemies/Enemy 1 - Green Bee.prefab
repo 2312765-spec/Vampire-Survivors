@@ -155,7 +155,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &6254491537581076111
 MonoBehaviour:
@@ -176,6 +176,8 @@ MonoBehaviour:
   health: 5
   knockBackTime: 0.5
   expToGive: 1
+  coinValue: 1
+  coinDropRate: 0.5
 --- !u!114 &6254491537581076110
 MonoBehaviour:
   m_ObjectHideFlags: 0
