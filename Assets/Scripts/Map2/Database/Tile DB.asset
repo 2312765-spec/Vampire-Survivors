@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f421d335f422f4abd0afd090315f66, type: 3}
+  m_Name: Tile DB
+  m_EditorClassIdentifier: 
+  GroundTile: {fileID: 11400000, guid: 971e887732ab406428a0606111e73446, type: 2}
+  RoadTile: {fileID: 11400000, guid: 5017b55bac6f757489f26ab41af1912f, type: 2}
+  HouseTile: {fileID: 11400000, guid: 3927f7abfbc995d48a92050e3d5b8734, type: 2}
+  TreeTile: {fileID: 11400000, guid: 5bd4bbf4f5003f7418ba5aac3506492e, type: 2}
+  RockTile: {fileID: 11400000, guid: b841cba74baf3e947a2a95702ae9d9ca, type: 2}
+  SpawnTile: {fileID: 11400000, guid: 3fd8b22f3aef29149b64e7501db65bea, type: 2}

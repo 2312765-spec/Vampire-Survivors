@@ -1,33 +1,44 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
 
+    public SpriteRenderer spriteRenderer;
     public float moveSpeed;
     public Animator anim;
-    public SpriteRenderer spriteRenderer;
     public float pickupRange = 1.5f;
 
-    public List<Weapon> unassignedWeapons  = new List<Weapon>();
-    public List<Weapon> assignedWeapons    = new List<Weapon>();
+    public List<Weapon> unassignedWeapons = new List<Weapon>();
+    public List<Weapon> assignedWeapons = new List<Weapon>();
     public int maxWeapons = 3;
 
     [HideInInspector] public List<Weapon> fullyLevelledWeapons = new List<Weapon>();
-    [HideInInspector] private List<GameObject> activeOverlays  = new List<GameObject>();
+    [HideInInspector] private List<GameObject> activeOverlays = new List<GameObject>();
 
-    private void Awake() => instance = this;
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
         CacheComponents();
 
+        if (assignedWeapons == null) assignedWeapons = new List<Weapon>();
+        if (unassignedWeapons == null) unassignedWeapons = new List<Weapon>();
+
+        if (assignedWeapons.Count == 0 && unassignedWeapons.Count > 0)
+        {
+            AddWeapon(Random.Range(0, unassignedWeapons.Count));
+        }
+
         if (PlayerStatController.instance != null)
         {
-            moveSpeed    = PlayerStatController.instance.moveSpeed[0].value;
-            pickupRange  = PlayerStatController.instance.pickupRange[0].value;
-            maxWeapons   = Mathf.RoundToInt(PlayerStatController.instance.maxWeapons[0].value);
+            moveSpeed = PlayerStatController.instance.moveSpeed[0].value;
+            pickupRange = PlayerStatController.instance.pickupRange[0].value;
+            maxWeapons = Mathf.RoundToInt(PlayerStatController.instance.maxWeapons[0].value);
         }
 
         if (ClassManager.instance != null && ClassManager.instance.ActiveClass != null)
@@ -61,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
     private void CacheComponents()
     {
-        if (anim == null)           anim           = GetComponent<Animator>();
+        if (anim == null) anim = GetComponent<Animator>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -106,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
         if (spriteRenderer != null)
         {
-            if (moveInput.x > 0)      spriteRenderer.flipX = false;
+            if (moveInput.x > 0) spriteRenderer.flipX = false;
             else if (moveInput.x < 0) spriteRenderer.flipX = true;
         }
 
@@ -123,7 +134,6 @@ public class PlayerController : MonoBehaviour
         if (classData == null) return;
         CacheComponents();
 
-        // Apply visuals only for the first (primary) class
         bool isPrimaryClass = ClassManager.instance != null &&
                               classData == ClassManager.instance.firstClassSelected;
 
@@ -141,12 +151,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"ℹ️ Not applying visuals — classData ({classData.className}) is not firstClassSelected");
         }
 
-        // Determine primary vs secondary
         bool isSecondaryClass = ClassManager.instance != null &&
                                 ClassManager.instance.ActiveClass != null &&
                                 classData != ClassManager.instance.ActiveClass;
 
-        // Only clear weapons when switching primary class
         if (!isSecondaryClass)
         {
             DisableCurrentWeapons();
@@ -155,24 +163,18 @@ public class PlayerController : MonoBehaviour
             fullyLevelledWeapons.Clear();
         }
 
-        // Spawn starter weapon for primary class only
         if (!isSecondaryClass && classData.starterWeapon != null)
             SpawnAndAssignWeapon(classData.starterWeapon);
 
-        // Add remaining classWeapons to unassignedWeapons
         if (classData.classWeapons != null)
         {
             foreach (GameObject weaponPrefab in classData.classWeapons)
             {
                 if (weaponPrefab == null) continue;
 
-                // Skip primary starter weapon (it's already spawned above)
-                if (!isSecondaryClass &&
-                    classData.starterWeapon != null &&
-                    weaponPrefab == classData.starterWeapon) continue;
+                if (!isSecondaryClass && classData.starterWeapon != null && weaponPrefab == classData.starterWeapon)
+                    continue;
 
-                // FIX: skip if a weapon for this prefab already exists (prevents duplicates
-                //      when secondary class shares a weapon with primary class)
                 if (WeaponAlreadyExists(weaponPrefab))
                 {
                     Debug.Log($"⚠️ Weapon {weaponPrefab.name} already exists — skipping to avoid duplicate");
@@ -182,20 +184,18 @@ public class PlayerController : MonoBehaviour
                 GameObject weaponObj = Instantiate(weaponPrefab, transform);
                 weaponObj.transform.localPosition = Vector3.zero;
                 weaponObj.transform.localRotation = Quaternion.identity;
-                weaponObj.SetActive(false);   // inactive until player chooses it at level-up
+                weaponObj.SetActive(false);
 
                 Weapon weapon = weaponObj.GetComponent<Weapon>();
                 if (weapon != null)
                 {
                     weapon.weaponPrefab = weaponPrefab;
                     unassignedWeapons.Add(weapon);
-                    Debug.Log($"✅ [{(isSecondaryClass ? "SECONDARY" : "PRIMARY")}] "
-                            + $"Added to unassigned: {weapon.name}");
+                    Debug.Log($"✅ [{(isSecondaryClass ? "SECONDARY" : "PRIMARY")}] Added to unassigned: {weapon.name}");
                 }
             }
         }
 
-        // Add overlay for secondary class
         if (isSecondaryClass && classData.overlayPrefab != null)
             AddOverlay(classData.overlayPrefab);
 
@@ -207,11 +207,6 @@ public class PlayerController : MonoBehaviour
     // Weapon helpers
     // -----------------------------------------------------------------------
 
-    /// <summary>
-    /// Returns true if a weapon instance for this prefab already exists
-    /// in any of the three weapon lists (assigned / unassigned / maxed).
-    /// Prevents duplicate weapons when secondary class shares a weapon with primary.
-    /// </summary>
     private bool WeaponAlreadyExists(GameObject weaponPrefab)
     {
         foreach (var w in assignedWeapons)
@@ -264,8 +259,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public bool HasWeapon(Weapon weapon)
-        => weapon != null &&
-           (assignedWeapons.Contains(weapon) || fullyLevelledWeapons.Contains(weapon));
+        => weapon != null && (assignedWeapons.Contains(weapon) || fullyLevelledWeapons.Contains(weapon));
 
     public void AddWeapon(int weaponNumber)
     {
@@ -277,6 +271,9 @@ public class PlayerController : MonoBehaviour
         assignedWeapons.Add(weapon);
         weapon.gameObject.SetActive(true);
         unassignedWeapons.RemoveAt(weaponNumber);
+
+        if (UIController.instance != null)
+            UIController.instance.UpdateActiveClassDisplay();
     }
 
     public void AddWeapon(Weapon weaponToAdd)
@@ -297,6 +294,9 @@ public class PlayerController : MonoBehaviour
         }
 
         unassignedWeapons.Remove(weaponToAdd);
+
+        if (UIController.instance != null)
+            UIController.instance.UpdateActiveClassDisplay();
     }
 
     public void GiveStarterWeapon(GameObject starterWeaponObj)
@@ -324,18 +324,18 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Animator      prefabAnimator = characterPrefab.GetComponentInChildren<Animator>();
-        SpriteRenderer prefabSprite  = characterPrefab.GetComponentInChildren<SpriteRenderer>();
+        Animator prefabAnimator = characterPrefab.GetComponentInChildren<Animator>();
+        SpriteRenderer prefabSprite = characterPrefab.GetComponentInChildren<SpriteRenderer>();
 
         if (prefabAnimator != null && anim != null)
             anim.runtimeAnimatorController = prefabAnimator.runtimeAnimatorController;
 
         if (prefabSprite != null && spriteRenderer != null)
         {
-            spriteRenderer.sprite         = prefabSprite.sprite;
-            spriteRenderer.color          = prefabSprite.color;
+            spriteRenderer.sprite = prefabSprite.sprite;
+            spriteRenderer.color = prefabSprite.color;
             spriteRenderer.sortingLayerID = prefabSprite.sortingLayerID;
-            spriteRenderer.sortingOrder   = prefabSprite.sortingOrder;
+            spriteRenderer.sortingOrder = prefabSprite.sortingOrder;
             Debug.Log($"✅ Applied sprite: {prefabSprite.sprite?.name ?? "NULL"}");
         }
         else
