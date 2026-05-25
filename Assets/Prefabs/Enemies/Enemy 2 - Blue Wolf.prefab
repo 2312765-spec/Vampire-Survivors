@@ -176,6 +176,8 @@ MonoBehaviour:
   health: 10
   knockBackTime: 0.5
   expToGive: 2
+  coinValue: 1
+  coinDropRate: 0.5
 --- !u!114 &7835418827675219093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 7835418826033065373}
-  speed: 0.5
-  minSize: 0.9
+  speed: 0.787
+  minSize: 0.85
   maxSize: 1.1

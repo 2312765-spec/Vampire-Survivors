@@ -722,7 +722,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -730,6 +730,27 @@ TextureImporter:
       bones: []
       spriteID: d26e0112b0e7dc245851a565766ea644
       internalID: 852931892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Tile_Spawner
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 189
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52a0a2dfb9d41114aa1cad832ca9673e
+      internalID: -136544262
       vertices: []
       indices: 
       edges: []
@@ -748,6 +769,7 @@ TextureImporter:
       Sprite_Tile_House: -42401514
       Sprite_Tile_Road: 852931892
       Sprite_Tile_Rock: -1257107137
+      Sprite_Tile_Spawner: -136544262
       Sprite_Tile_Tree: 426953414
       Vampire Survival Sprites_Padded_0: 348683426
       Vampire Survival Sprites_Padded_1: 266326301

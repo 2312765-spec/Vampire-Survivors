@@ -7,7 +7,7 @@ public class EnemyController : MonoBehaviour
     [Header("Info")]
     public Rigidbody2D theRB;
     public float moveSpeed;
-    private Transform target;
+    private GameObject target;
     public float damage;
     public float hitWaitTime = 1f;
     private float hitCounter;
@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (target.gameObject.activeSelf)
+        if (target.activeSelf)
         {
             if (knockBackCounter > 0)
             {
@@ -48,7 +48,7 @@ public class EnemyController : MonoBehaviour
             }
 
             // Tính hướng di chuyển
-            moveDirection = (target.position - transform.position).normalized;
+            moveDirection = (target.transform.position - transform.position).normalized;
 
             // Di chuyển bằng Rigidbody2D
             theRB.velocity = moveDirection * moveSpeed;
@@ -110,7 +110,7 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    public void SetTarget(Transform newTarget)
+    public void SetTarget(GameObject newTarget)
     {
         this.target = newTarget;
     }

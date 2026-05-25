@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class LevelUpSellectionButton : MonoBehaviour
 {
-    
-
     public TMP_Text upgradeDescText, nameLevelText; // The upgrade description text and the name level text. GK 
 
     public Image weaponIcon; // The weapon icon. GK
@@ -40,7 +38,7 @@ public class LevelUpSellectionButton : MonoBehaviour
             }
             else
             {
-              PlayerController.instance.AddWeapon(assignedWeapon);
+                GameObject.Find("Player").GetComponent<BasePlayerController>().AddWeapon(assignedWeapon);
             }
             UIController.instance.levelUpPanel.SetActive(false); // Set the level up panel to false. GK
             Time.timeScale = 1f; // Set the timescale to 1. GK

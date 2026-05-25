@@ -191,6 +191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 6254491535997548422}
-  speed: 0.5
-  minSize: 0.9
+  speed: 0.787
+  minSize: 0.85
   maxSize: 1.1
