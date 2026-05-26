@@ -4,23 +4,41 @@ using UnityEngine;
 
 public class SFXManager : MonoBehaviour
 {
-    public static SFXManager instance; // Singleton. GK
+    public static SFXManager instance;
 
-    public void Awake() // GK
+    private void Awake()
     {
-        instance = this; // GK
+        instance = this;
     }
 
-    public AudioSource[] soundEffects; // The sound effects. GK 
-
-    public void PlaySFX(int sfxToPlay) // Play the sound effect. GK
+    [System.Serializable]
+    public class SFXGroup
     {
-        soundEffects[sfxToPlay].Stop(); // Stop the sound effect. GK
-        soundEffects[sfxToPlay].Play(); // Play the sound effect. GK
+        public string groupName;
+        public AudioSource[] sounds;
     }
-    public void PlaySFXPitched(int sfxToPlay) // Play the sound effect with pitch. GK
+
+    public SFXGroup[] soundGroups;
+
+    public void PlaySFX(int groupIndex)
     {
-        soundEffects[sfxToPlay].pitch = Random.Range(.8f,1.2f); // Set the pitch. GK
-        PlaySFX(sfxToPlay); // Play the sound effect. GK
+        AudioSource[] group = soundGroups[groupIndex].sounds;
+
+        int randomIndex = Random.Range(0, group.Length);
+
+        group[randomIndex].Stop();
+        group[randomIndex].Play();
+    }
+
+    public void PlaySFXPitched(int groupIndex)
+    {
+        AudioSource[] group = soundGroups[groupIndex].sounds;
+
+        int randomIndex = Random.Range(0, group.Length);
+
+        group[randomIndex].pitch = Random.Range(0.8f, 1.2f);
+
+        group[randomIndex].Stop();
+        group[randomIndex].Play();
     }
 }
