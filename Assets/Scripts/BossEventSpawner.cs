@@ -89,7 +89,7 @@ public class BossEventSpawner : MonoBehaviour
         Debug.Log($"-> Boss thứ {i + 1} xuất hiện ở góc: {currentAngle % 360f} độ.");
 
         // ← Delay giữa mỗi con boss (chỉnh số giây tùy ý)
-        yield return new WaitForSecondsRealtime(100f); // 2 giây/con, dùng Realtime vì Time.timeScale có thể = 0
+        yield return new WaitForSecondsRealtime(100f); // 
     }
     }
 }

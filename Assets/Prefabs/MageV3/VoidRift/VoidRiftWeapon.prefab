@@ -47,21 +47,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 0
-    damage: 50
+    damage: 80
     range: 3
     timeBetweenAttacks: 6
     amount: 3
     duration: 0
     upgradeText: VoidRift 1
   - speed: 0
-    damage: 75
+    damage: 100
     range: 3.5
     timeBetweenAttacks: 5
     amount: 5
     duration: 0
     upgradeText: VoidRift 2
   - speed: 0
-    damage: 100
+    damage: 150
     range: 4
     timeBetweenAttacks: 4
     amount: 7

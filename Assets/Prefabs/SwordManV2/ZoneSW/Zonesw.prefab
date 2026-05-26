@@ -96,22 +96,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 2
-    damage: 25
+    damage: 60
     range: 1.5
     timeBetweenAttacks: 1
     amount: 0
     duration: 10
     upgradeText: SwordZone 1
   - speed: 3
-    damage: 30
-    range: 1.5
+    damage: 100
+    range: 2
     timeBetweenAttacks: 1
     amount: 0
     duration: 12
     upgradeText: SwordZone 2
   - speed: 4
-    damage: 35
-    range: 2
+    damage: 120
+    range: 3
     timeBetweenAttacks: 1
     amount: 0
     duration: 14

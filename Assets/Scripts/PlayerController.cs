@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -224,7 +224,14 @@ public class PlayerController : MonoBehaviour
     private void DisableCurrentWeapons()
     {
         foreach (Weapon weapon in GetComponentsInChildren<Weapon>(true))
-            if (weapon != null) weapon.gameObject.SetActive(false);
+        {
+            if (weapon != null)
+            {
+                // ✅ Stop projectiles/effects từ weapon cũ trước khi disable
+                weapon.StopActiveSkill();
+                weapon.gameObject.SetActive(false);
+            }
+        }
     }
 
     private void SpawnAndAssignWeapon(GameObject weaponPrefab)
@@ -347,7 +354,13 @@ public class PlayerController : MonoBehaviour
     private void ClearCurrentWeapons()
     {
         foreach (var w in assignedWeapons)
-            if (w != null) w.gameObject.SetActive(false);
+        {
+            if (w != null)
+            {
+                w.StopActiveSkill();  // ✅ Destroy projectiles
+                w.gameObject.SetActive(false);
+            }
+        }
 
         assignedWeapons.Clear();
         unassignedWeapons.Clear();

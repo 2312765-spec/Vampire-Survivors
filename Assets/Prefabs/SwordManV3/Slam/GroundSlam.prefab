@@ -46,14 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - speed: 0
-    damage: 40
+    damage: 60
     range: 2.5
     timeBetweenAttacks: 3.5
     amount: 1
     duration: 0
     upgradeText: GroundSlam 1
   - speed: 0
-    damage: 60
+    damage: 80
     range: 3
     timeBetweenAttacks: 3
     amount: 1
