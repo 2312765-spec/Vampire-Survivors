@@ -50,7 +50,7 @@ public class MainMenu : MonoBehaviour
                 SceneManager.LoadScene("Main");
                 break;
             case 2:
-                SceneManager.LoadScene("Map 2");
+                SceneManager.LoadScene("Map2");
                 break;
             case 3:
                 //Custom Map load
