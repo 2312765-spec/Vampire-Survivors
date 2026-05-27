@@ -1,7 +1,7 @@
 
 # Class Survival
 
-![Class Survival Logo](Assets/Image/MM.png)
+![Class Survival Logo](Assets/Image/game_logo.png)
 
 **Class Survival** is a 2D survival arcade game built with Unity, evolved from a Vampire Survivors-style foundation into a class-based progression system. Players start with a basic character and a **Dagger**, then build power by selecting Classes, unlocking class-specific weapons, and promoting classes into stronger forms.
 
@@ -13,7 +13,7 @@
 - **First Level Up**: Choose your first **Class** (Warrior, Mage, or Ranger).
 - **Subsequent Level Ups**: Select weapons belonging to your active class.
 - **Promotion**: When all weapons for a class are maxed, you can **Promote** the class into a stronger tier.
-- **Multi-Class**: There is a small chance (~15%) on each level-up to unlock a **2nd** or **3rd** class slot.
+- **Multi-Class**: There is a small chance (~0.5%) on each level-up to unlock a **2nd** or **3rd** class slot.
 - **Class Limit**: Maximum of **3 classes** per run.
 
 ### Available Classes
@@ -22,8 +22,6 @@
 |---------|---------|-----------|
 | Warrior | Blade weapons (2-3) | Blade Master |
 | Mage    | Magic spells (2-3) | Arch Mage |
-| Ranger  | Ranged attacks (2-3) | Sniper Master |
-tutututut
 
 ## Table of Contents
 
@@ -71,7 +69,7 @@ After opening the project in Unity:
 2. In the Inspector, assign the **ClassData** assets from `Assets/Classes/` to the **All Classes** list:
    - `Warrior.asset`
    - `Mage.asset`
-   - `Ranger.asset`
+  
 3. For each **ClassData** asset, assign the **class weapons** (Weapon components from the scene).
 4. Optionally assign **promotion class** references (e.g., Warrior → WarriorTier2).
 
@@ -117,7 +115,8 @@ The project follows this structure to ensure ease of navigation and development:
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
 
-## Contact
+## Contact & Credits
 
-- **Developers:** Antonis Kyriakou, George Constantinou and Dimitris Achilleos
+- **Developers (Current Fork):** Nguyen Van Thuan, Mai Van Quang, Nguyen Huu Trung Son
 - **Project Link:** https://github.com/2312765-spec/Vampire-Survivors
+- **Original Project:** Forked and developed from the original repository by VampAK1864 https://github.com/VampAK1864/Vampire-Survivors
