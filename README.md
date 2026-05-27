@@ -90,7 +90,7 @@ Survive as long as possible by defeating waves of enemies. On each level-up, cho
 
 Collect experience to level up, coins to purchase stat upgrades, and stay alive!
 
-![Gameplay Screenshot](Assets/Image/Game.png)
+![Gameplay Screenshot](Assets/Image/game_mage.png)
 
 ## Development
 
@@ -109,7 +109,7 @@ The project follows this structure to ensure ease of navigation and development:
     - `ExperienceLevelController.cs` — Level-up logic using the class system.
     - `LevelUpSellectionButton.cs` — UI button supporting class/weapon/promotion choices.
 
-![Feature Addition Flowchart](Assets/Image/EMM.png)
+![Feature Addition Flowchart](Assets/Image/game_swm.png)
 
 ## License
 
