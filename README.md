@@ -3,18 +3,17 @@
 
 ![Class Survival Logo](Assets/Image/game_logo.png)
 
-**Class Survival** is a 2D survival arcade game built with Unity, evolved from a Vampire Survivors-style foundation into a class-based progression system. Players start with a basic character and a **Dagger**, then build power by selecting Classes, unlocking class-specific weapons, and promoting classes into stronger forms.
+**Class Survival là một tựa game nhập vai sinh tồn arcade 2D được xây dựng bằng Unity. Trò chơi được phát triển dựa trên nền tảng lối chơi của Vampire Survivors nhưng kết hợp thêm hệ thống tiến hóa theo hệ phái (Class). Người chơi sẽ bắt đầu với một nhân vật cơ bản và một con Dao găm (Dagger), sau đó gia tăng sức mạnh bằng cách chọn Hệ phái, mở khóa các vũ khí đặc trưng và nâng bậc (Promote) hệ phái lên các dạng mạnh mẽ hơn.
 
-## Progression System
+## Hệ thống Tiến hóa
 
-### How it works
+### Cách thức hoạt động
 
-- **Start**: Begin as a basic character with a **Dagger**.
-- **First Level Up**: Choose your first **Class** (Warrior, Mage, or Ranger).
-- **Subsequent Level Ups**: Select weapons belonging to your active class.
-- **Promotion**: When all weapons for a class are maxed, you can **Promote** the class into a stronger tier.
-- **Multi-Class**: There is a small chance (~0.5%) on each level-up to unlock a **2nd** or **3rd** class slot.
-- **Class Limit**: Maximum of **3 classes** per run.
+- **Bắt đầu**: Khởi đầu với một nhân vật cơ bản sở hữu một con Dao găm.
+- **Lên cấp lần đầu**: Chọn Hệ phái đầu tiên của bạn (Chiến binh - Warrior, Pháp sư - Mage, hoặc Cung thủ - Ranger).
+- **Các lần lên cấp tiếp theo**: Lựa chọn các vũ khí thuộc về Hệ phái đang kích hoạt của bạn.
+- **Nâng bậc**: Khi tất cả vũ khí của một Hệ phái đã đạt cấp tối đa, bạn có thể Nâng bậc hệ phái đó lên một cấp độ (Tier) cao hơn và mạnh hơn.
+
 
 ### Available Classes
 
@@ -25,97 +24,94 @@
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Playing the Game](#playing-the-game)
-  - [Controls](#controls)
-  - [Gameplay Overview](#gameplay-overview)
-- [Development](#development)
-  - [Project Structure](#project-structure)
-- [License](#license)
-- [Contact](#contact)
+- [Hướng dẫn Bắt đầu](#getting-started)
+  - [Điều kiện tiên quyết](#prerequisites)
+  - [Cài đặt](#installation)
+- [Trải nghiệm Trò chơi](#playing-the-game)
+  - [Phím điều khiển](#controls)
+  - [Tổng quan Lối chơi](#gameplay-overview)
+- [Phát triển Dự án](#development)
+  - [Cấu trúc Thư mục](#project-structure)
+- [Bản quyền](#license)
+- [Liên hệ](#contact)
 
-## Getting Started
+## Hướng dẫn Bắt đầu
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+Các hướng dẫn dưới đây sẽ giúp bạn tải một bản sao của dự án và khởi chạy trên máy cục bộ nhằm phục vụ cho mục đích phát triển và thử nghiệm.
 
-### Prerequisites
+### Điều kiện tiên quyết
 
-What things you need to install the software and how to install them:
-
+Các phần mềm bạn cần cài đặt và cách cài đặt chúng:
 ```bash
 Unity Editor (2021.3 LTS or newer)
 Git
 ```
 
-### Installation
+### Cài đặt
 
-A step-by-step series of examples that tell you how to get a development environment running:
-
+Các bước tuần tự để thiết lập môi trường phát triển:
 1. Clone the repository:
    ```bash
    git clone https://github.com/2312765-spec/Vampire-Survivors.git
    ```
-2. Open Unity Hub and add the cloned repository folder.
-3. Select the correct Unity version and open the project.
-4. Open the **Main** scene and press Play.
+2. Mở **Unity Hub** và thêm thư mục dự án vừa clone về..
+3. Chọn đúng phiên bản Unity phù hợp và mở dự án.
+4. Mở scene **Main** và nhấn nút **Play** để chạy thử.
 
-## Setting Up Classes in the Editor
+## Thiết lập Hệ phái trong Editor
 
-After opening the project in Unity:
+Sau khi mở dự án trong Unity:
 
-1. Locate the **ClassManager** component in the scene (or add it to the GameManager object).
-2. In the Inspector, assign the **ClassData** assets from `Assets/Classes/` to the **All Classes** list:
+1. Tìm thành phần (component) `ClassManager` trong scene (hoặc thêm nó vào đối tượng `GameManager`).
+2. 2. Trong cửa sổ **Inspector**, kéo thả các tài nguyên `ClassData` từ thư mục `Assets/Classes/` vào danh sách **All Classes**:
    - `Warrior.asset`
    - `Mage.asset`
   
-3. For each **ClassData** asset, assign the **class weapons** (Weapon components from the scene).
-4. Optionally assign **promotion class** references (e.g., Warrior → WarriorTier2).
+3. Với mỗi tài nguyên `ClassData`, hãy gán các vũ khí tương ứng (các thành phần Weapon từ scene).
+4. (Tùy chọn) Gán các liên kết cho việc nâng bậc hệ phái (Ví dụ: *Warrior* $\rightarrow$ *WarriorTier2*).
 
-## Playing the Game
+## Trải nghiệm Trò chơi
 
-### Controls
+### Phím điều khiển
 
-- **Arrow Keys / WASD:** Move the character
-- **Mouse:** Choose your upgrade at each level up.
-- **Escape:** Pause the game.
+- **Phím mũi tên / WASD:** Di chuyển nhân vật.
+- **Chuột:** Lựa chọn nâng cấp mỗi khi lên cấp.
+- **Escape:** Tạm dừng trò chơi.
 
-### Gameplay Overview
+### Tổng quan Lối chơi
 
-Survive as long as possible by defeating waves of enemies. On each level-up, choose:
-- A **new class** (if you haven't chosen one yet, or by rare chance)
-- A **class weapon** upgrade or unlock
-- A **class promotion** (when all class weapons are maxed)
+Cố gắng sinh tồn càng lâu càng tốt bằng cách đánh bại các làn sóng kẻ thù. Mỗi khi lên cấp, bạn có thể chọn:
+- Một Hệ phái mới (nếu bạn chưa chọn, hoặc thông qua tỷ lệ hiếm xuất hiện).
+- Mở khóa hoặc nâng cấp một vũ khí thuộc Hệ phái.
+- Nâng bậc Hệ phái (khi tất cả vũ khí của hệ phái đó đã đạt cấp tối đa).
 
-Collect experience to level up, coins to purchase stat upgrades, and stay alive!
+Thu thập các hạt kinh nghiệm để lên cấp, nhặt tiền xu để mua các nâng cấp chỉ số, và giữ mạng sống!
 
 ![Gameplay Screenshot](Assets/Image/game_mage.png)
 
-## Development
+## Phát triển Dự án
 
-### Project Structure
+### Cấu trúc Thư mục
 
-The project follows this structure to ensure ease of navigation and development:
-
+Dự án tuân theo cấu trúc dưới đây để đảm bảo việc tìm kiếm và phát triển dễ dàng:
 - **Assets/**
-  - **Animations/**: Contains all in-game animations.
-  - **Classes/**: ClassData ScriptableObject assets (Warrior, Mage, Ranger, etc.).
-  - **Prefabs/**: Main enemy and pickup objects.
-  - **Scenes/**: Unity scenes including the main game and menus.
-  - **Scripts/**: Game logic scripts.
-    - `ClassData.cs` — ScriptableObject defining a class (name, weapons, promotion).
-    - `ClassManager.cs` — Runtime manager for the player's class progression.
-    - `ExperienceLevelController.cs` — Level-up logic using the class system.
-    - `LevelUpSellectionButton.cs` — UI button supporting class/weapon/promotion choices.
+  - **Animations/**: Chứa tất cả các hiệu ứng hoạt ảnh trong game.
+  - **Classes/**: Các tài nguyên ScriptableObject của ClassData (Warrior, Mage, Ranger, v.v.).etc.).
+  - **Prefabs/**: Các đối tượng Prefab của kẻ địch và vật phẩm nhặt được.
+  - **Scenes/**: Các màn chơi Unity bao gồm màn chơi chính và menu.
+  - **Scripts/**: Các mã nguồn quản lý logic game.
+    - `ClassData.cs` — ScriptableObject định nghĩa một hệ phái (tên, vũ khí, nâng bậc).
+    - `ClassManager.cs` — Bộ quản lý tiến trình hệ phái của người chơi khi runtime.
+    - `ExperienceLevelController.cs` — Logic lên cấp tích hợp với hệ thống hệ phái.
+    - `LevelUpSellectionButton.cs` — Nút bấm UI hỗ trợ chọn hệ phái/vũ khí/nâng bậc.
 
 ![Feature Addition Flowchart](Assets/Image/game_swm.png)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
+Dự án này được cấp phép theo các điều khoản của MIT License - xem tệp LICENSE.md để biết thêm chi tiết.
 
-## Contact & Credits
+## Liên hệ & Công trạng
 
 - **Developers (Current Fork):** Nguyen Van Thuan, Mai Van Quang, Nguyen Huu Trung Son
 - **Project Link:** https://github.com/2312765-spec/Vampire-Survivors
