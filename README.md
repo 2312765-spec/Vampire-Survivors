@@ -52,7 +52,7 @@ Git
 Các bước tuần tự để thiết lập môi trường phát triển:
 1. Clone the repository:
    ```bash
-   git clone https://github.com/2312765-spec/Vampire-Survivors.git
+   git clone https://github.com/2312765-spec/Class-Survival.git
    ```
 2. Mở **Unity Hub** và thêm thư mục dự án vừa clone về..
 3. Chọn đúng phiên bản Unity phù hợp và mở dự án.
@@ -63,7 +63,7 @@ Các bước tuần tự để thiết lập môi trường phát triển:
 Sau khi mở dự án trong Unity:
 
 1. Tìm thành phần (component) `ClassManager` trong scene (hoặc thêm nó vào đối tượng `GameManager`).
-2. 2. Trong cửa sổ **Inspector**, kéo thả các tài nguyên `ClassData` từ thư mục `Assets/Classes/` vào danh sách **All Classes**:
+2. Trong cửa sổ **Inspector**, kéo thả các tài nguyên `ClassData` từ thư mục `Assets/Classes/` vào danh sách **All Classes**:
    - `Warrior.asset`
    - `Mage.asset`
   
@@ -111,8 +111,8 @@ Dự án tuân theo cấu trúc dưới đây để đảm bảo việc tìm ki�
 
 Dự án này được cấp phép theo các điều khoản của MIT License - xem tệp LICENSE.md để biết thêm chi tiết.
 
-## Liên hệ & Công trạng
+## Contact & Credits
 
 - **Developers (Current Fork):** Nguyen Van Thuan, Mai Van Quang, Nguyen Huu Trung Son
-- **Project Link:** https://github.com/2312765-spec/Vampire-Survivors
+- **Project Link:** https://github.com/2312765-spec/Class-Survival
 - **Original Project:** Forked and developed from the original repository by VampAK1864 https://github.com/VampAK1864/Vampire-Survivors
